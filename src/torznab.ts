@@ -797,43 +797,6 @@ export async function updateCaps(): Promise<void> {
 	}
 }
 
-export async function validateTorznabUrls() {
-	const { torznab } = getRuntimeConfig();
-	if (!torznab) return;
-
-	const urls: URL[] = torznab.map((str) => new URL(str));
-	for (const url of urls) {
-		if (!url.pathname.endsWith("/api")) {
-			throw new CrossSeedError(
-				`Torznab url ${url} must have a path ending in /api`,
-			);
-		}
-		if (!url.searchParams.has("apikey")) {
-			throw new CrossSeedError(
-				`Torznab url ${url} does not specify an apikey`,
-			);
-		}
-	}
-	await syncWithDb();
-	await updateCaps();
-
-	const indexersWithoutSearch = await db("indexer")
-		.where({ search_cap: false, active: true })
-		.select({ id: "id", url: "url" });
-
-	for (const indexer of indexersWithoutSearch) {
-		logger.warn(
-			`Ignoring indexer that doesn't support searching: ${indexer.name ?? indexer.url}`,
-		);
-	}
-
-	const indexersWithSearch = await getEnabledIndexers();
-
-	if (indexersWithSearch.length === 0) {
-		logger.warn("no working indexers available");
-	}
-}
-
 /**
  * Snooze indexers based on the response headers and status code.
  * specifically for a search, probably not applicable to a caps fetch.

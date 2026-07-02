@@ -18,7 +18,6 @@ import {
 	RuntimeConfig,
 	setRuntimeConfig,
 } from "./runtimeConfig.js";
-import { validateTorznabUrls } from "./torznab.js";
 import { Awaitable, mapAsync, notExists, verifyDir, wait } from "./utils.js";
 
 export async function exitGracefully() {
@@ -145,7 +144,6 @@ export async function doStartupValidation(): Promise<void> {
 		mapAsync(getClients(), (client) => client.validateConfig());
 	const errors = (
 		await Promise.allSettled([
-			retry(validateTorznabUrls, 5, ms("1 minute")),
 			retry(validateUArrLs, 5, ms("1 minute")),
 			retry(validateClientConfig, 5, ms("1 minute")),
 		])
