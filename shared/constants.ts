@@ -109,6 +109,7 @@ export const ZodErrorMessages = {
 export const defaultConfig: RuntimeConfig = {
 	delay: 30,
 	torznab: [],
+	torznabPathSuffix: "/api",
 	useClientTorrents: false,
 	torrentClients: [],
 	dataDirs: [],
