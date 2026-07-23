@@ -582,17 +582,34 @@ export function assembleUrl(
 	apikey: string,
 	params: Query,
 ): string {
+const { torznabPathSuffix = "/api" } = getRuntimeConfig();
+const url = normalizeTorznabUrl(baseUrl, torznabPathSuffix);
+const searchParams = new URLSearchParams();
+searchParams.set("apikey", apikey);
+// add t, q, etc
+url.search = searchParams.toString();
+return url.toString();
+}
+
+function normalizeTorznabUrl(baseUrl: string, suffix: string): URL {
 	const url = new URL(baseUrl);
-	const searchParams = new URLSearchParams();
 
-	searchParams.set("apikey", apikey);
-
-	for (const [key, value] of Object.entries(params)) {
-		if (value != null) searchParams.set(key, String(value));
+	if (!suffix) {
+		return url;
 	}
 
-	url.search = searchParams.toString();
-	return url.toString();
+	const normalizedSuffix = suffix.startsWith("/") ? suffix : `/${suffix}`;
+	const pathname = url.pathname.replace(/\/+$/, "");
+
+	if (
+		pathname === normalizedSuffix ||
+		pathname.endsWith(normalizedSuffix)
+	) {
+		return url;
+	}
+
+	url.pathname = `${pathname}${normalizedSuffix}`;
+	return url;
 }
 
 async function fetchCaps(indexer: Indexer): Promise<Caps> {
