@@ -12,6 +12,7 @@ export type WebhookEntry = string | z.infer<typeof WebhookObjectSchema>;
 export const RUNTIME_CONFIG_SCHEMA = z.object({
 	delay: z.number().int().min(30).max(3600),
 	torznab: z.array(z.string()),
+    torznabPathSuffix: z.string(),
 	useClientTorrents: z.boolean(),
 	dataDirs: z.array(z.string()),
 	matchMode: z.nativeEnum(MatchMode),
