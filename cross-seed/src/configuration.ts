@@ -46,6 +46,7 @@ export interface FileConfig {
 	linkCategory?: string;
 	torrentDir?: string;
 	torznab?: string[];
+	torznabPathSuffix?: string;
 	torrentClients?: string[];
 	qbittorrentUrl?: string;
 	rtorrentRpcUrl?: string;
@@ -118,6 +119,7 @@ export function getDefaultRuntimeConfig(): RuntimeConfig {
 		delay: 30,
 		torznab: [],
 		useClientTorrents: true,
+		torznabPathSuffix: "/api",
 		dataDirs: [],
 		matchMode: MatchMode.FLEXIBLE,
 		skipRecheck: true,
@@ -186,6 +188,10 @@ export function transformFileConfig(
 
 	if (isStringArray(fileConfig.torznab)) {
 		result.torznab = fileConfig.torznab;
+	}
+	
+	if (typeof fileConfig.torznabPathSuffix === "string") {
+		result.torznabPathSuffix = fileConfig.torznabPathSuffix;
 	}
 
 	if (typeof fileConfig.useClientTorrents === "boolean") {
