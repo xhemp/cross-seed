@@ -120,9 +120,9 @@ export default function TrackerEditSheet({
 
     // Validate URL format for torznab API
     const trimmedUrl = url.trim();
-    if (!trimmedUrl.endsWith("/api")) {
-      toast.error("URL must end with /api");
-      return;
+    //if (!trimmedUrl.endsWith("/api")) {
+    //  toast.error("URL must end with /api");
+    //  return;
     }
 
     try {
